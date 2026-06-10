@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>herog · 사용자 참여 테스트(UT) 안내</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<style>
+  :root {
+    --orange: #E54712;
+    --orange-soft: #FF6A3D;
+    --bg: #0C0C0E;
+    --panel: #16161A;
+    --panel-2: #1C1C21;
+    --line: rgba(255,255,255,0.08);
+    --line-strong: rgba(255,255,255,0.14);
+    --text: #F4F3F2;
+    --muted: #93939B;
+    --dim: #66666E;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--bg); }
+  body {
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    background:
+      radial-gradient(900px 520px at 78% -8%, rgba(229,71,18,0.16), transparent 60%),
+      radial-gradient(720px 480px at 8% 0%, rgba(229,71,18,0.07), transparent 55%),
+      var(--bg);
+  }
+
+  .wrap { max-width: 940px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- Header ---------- */
+  header { padding: 56px 0 14px; }
+  .brand { display: flex; align-items: center; gap: 11px; }
+  .brand-mark {
+    width: 30px; height: 30px; border-radius: 9px; position: relative;
+    background: linear-gradient(150deg, var(--orange-soft), var(--orange));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 18px rgba(229,71,18,0.4);
+  }
+  .brand-mark svg { width: 17px; height: 17px; display: block; }
+  .brand-name { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+  .brand-name b { color: var(--orange-soft); }
+
+  .hero { margin-top: 36px; }
+  .hero .kicker {
+    display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 14px;
+    border-radius: 99px; background: rgba(229,71,18,0.12); border: 1px solid rgba(229,71,18,0.32);
+    font-size: 12.5px; font-weight: 700; letter-spacing: 0.3px; color: var(--orange-soft);
+  }
+  .hero h1 { margin-top: 18px; font-size: 38px; line-height: 1.16; font-weight: 800; letter-spacing: -1.3px; }
+  .hero h1 .accent { color: var(--orange-soft); }
+  .hero p { margin-top: 18px; font-size: 16px; line-height: 1.7; color: var(--muted); max-width: 660px; text-wrap: pretty; }
+  .hero p b { color: var(--text); font-weight: 700; }
+
+  /* ---------- Tip callout ---------- */
+  .tip {
+    margin-top: 26px; display: flex; gap: 14px; padding: 18px 20px;
+    background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--orange);
+    border-radius: 14px;
+  }
+  .tip .tip-ico { flex: 0 0 auto; font-size: 20px; line-height: 1.4; }
+  .tip .tip-body h4 { font-size: 14px; font-weight: 800; color: var(--text); letter-spacing: -0.2px; }
+  .tip .tip-body p { margin-top: 6px; font-size: 14px; line-height: 1.65; color: var(--muted); }
+  .tip .tip-body p .hl { color: var(--orange-soft); font-weight: 700; }
+
+  /* ---------- Steps ---------- */
+  main { padding: 14px 0 90px; }
+  .steps-head { margin-top: 46px; margin-bottom: 22px; display: flex; align-items: baseline; gap: 12px; }
+  .steps-head h2 { font-size: 15px; font-weight: 700; letter-spacing: 0.2px; }
+  .steps-head h2::before {
+    content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--orange); margin-right: 10px; transform: translateY(-2px);
+  }
+  .steps-head .sub { font-size: 13px; color: var(--dim); }
+
+  .steps { display: flex; flex-direction: column; gap: 16px; }
+
+  .step {
+    position: relative; display: grid; grid-template-columns: 88px 1fr; gap: 4px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 20px;
+    overflow: hidden; transition: border-color .2s, box-shadow .2s, transform .2s;
+  }
+  .step:hover { border-color: rgba(229,71,18,0.5); box-shadow: 0 16px 38px rgba(0,0,0,0.45); }
+
+  .step-rail {
+    background: linear-gradient(165deg, var(--panel-2), #131317);
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; align-items: center; padding: 22px 0;
+  }
+  .step-no {
+    width: 44px; height: 44px; border-radius: 13px;
+    background: rgba(229,71,18,0.12); border: 1px solid rgba(229,71,18,0.34);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; font-weight: 800; color: var(--orange-soft);
+  }
+  .step-line { flex: 1; width: 2px; margin-top: 14px; background: linear-gradient(var(--line-strong), transparent); }
+
+  .step-body { padding: 22px 24px 24px; }
+  .step-tag { font-size: 11px; font-weight: 800; letter-spacing: 1.4px; color: var(--orange-soft); text-transform: uppercase; }
+  .step h3 { margin-top: 6px; font-size: 21px; font-weight: 800; letter-spacing: -0.5px; }
+  .step .step-sub { margin-top: 4px; font-size: 13.5px; color: var(--dim); }
+
+  .step ul { margin-top: 16px; display: flex; flex-direction: column; gap: 9px; }
+  .step li {
+    position: relative; padding-left: 22px; font-size: 14.5px; line-height: 1.6; color: var(--muted); text-wrap: pretty;
+  }
+  .step li::before {
+    content: ""; position: absolute; left: 4px; top: 9px; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--orange); opacity: 0.85;
+  }
+
+  .step-foot { margin-top: 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .btn-start {
+    display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 20px;
+    border-radius: 12px; border: 0; cursor: pointer;
+    background: linear-gradient(150deg, var(--orange-soft), var(--orange)); color: #fff;
+    font-family: inherit; font-size: 14.5px; font-weight: 700; letter-spacing: -0.2px;
+    box-shadow: 0 8px 22px rgba(229,71,18,0.32); transition: transform .15s, box-shadow .15s;
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(229,71,18,0.42); }
+  .btn-start svg { width: 16px; height: 16px; }
+  .step-foot .hint { font-size: 13px; color: var(--dim); }
+
+  footer { padding: 28px 0 70px; color: var(--dim); font-size: 13px; border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+  /* ---------- Viewer modal ---------- */
+  .viewer {
+    position: fixed; inset: 0; z-index: 100; display: none;
+    align-items: center; justify-content: center; padding: 26px;
+    background: rgba(6,6,8,0.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  }
+  .viewer.on { display: flex; animation: vFade .2s ease; }
+  @keyframes vFade { from { opacity: 0; } to { opacity: 1; } }
+
+  .viewer-inner { display: flex; flex-direction: column; align-items: center; gap: 16px;
+    max-height: 100%; animation: vRise .3s cubic-bezier(.22,1,.36,1); }
+  @keyframes vRise { from { transform: translateY(14px); opacity: .6; } to { transform: none; opacity: 1; } }
+
+  .viewer-bar { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 430px; }
+  .viewer-bar .vtitle { flex: 1; min-width: 0; }
+  .viewer-bar .vno { font-size: 11px; font-weight: 800; letter-spacing: 1.2px; color: var(--orange-soft); }
+  .viewer-bar .vname { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; color: #fff;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vbtn { flex: 0 0 auto; width: 38px; height: 38px; border-radius: 11px; border: 1px solid var(--line-strong);
+    background: var(--panel); color: var(--text); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background .15s, border-color .15s; }
+  .vbtn:hover { background: var(--panel-2); border-color: var(--orange); }
+  .vbtn:disabled { opacity: 0.32; cursor: not-allowed; }
+  .vbtn:disabled:hover { background: var(--panel); border-color: var(--line-strong); }
+  .vbtn svg { width: 18px; height: 18px; }
+
+  .device {
+    position: relative; width: min(420px, 90vw); height: min(862px, calc(100vh - 150px));
+    border-radius: 44px; background: #000; padding: 5px;
+    box-shadow: 0 40px 90px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .device iframe { width: 100%; height: 100%; border: 0; border-radius: 39px; background: #fff; display: block; }
+  .device .vloading {
+    position: absolute; inset: 5px; border-radius: 39px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 14px; background: #0E0E10; color: var(--dim);
+    font-size: 13px; font-weight: 600; transition: opacity .3s; z-index: 2;
+  }
+  .device.loaded .vloading { opacity: 0; pointer-events: none; }
+  .spinner { width: 30px; height: 30px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.12);
+    border-top-color: var(--orange); animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .viewer-nav { display: flex; align-items: center; gap: 16px; }
+  .viewer-nav .dots { display: flex; gap: 7px; }
+  .viewer-nav .dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.16); transition: background .2s, transform .2s; }
+  .viewer-nav .dots i.active { background: var(--orange-soft); transform: scale(1.25); }
+  .nav-pill {
+    display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px;
+    border-radius: 11px; border: 1px solid var(--line-strong); background: var(--panel); color: var(--text);
+    font-family: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; transition: background .15s, border-color .15s; }
+  .nav-pill:hover:not(:disabled) { background: var(--panel-2); border-color: var(--orange); }
+  .nav-pill:disabled { opacity: 0.3; cursor: not-allowed; }
+  .nav-pill svg { width: 15px; height: 15px; }
+
+  .esc-hint { font-size: 12px; color: rgba(255,255,255,0.4); }
+  .esc-hint kbd { background: var(--panel); border: 1px solid var(--line-strong); border-radius: 5px;
+    padding: 1px 6px; font-family: inherit; font-size: 11px; }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 0 18px; }
+    .hero h1 { font-size: 28px; }
+    header { padding: 38px 0 8px; }
+    .step { grid-template-columns: 1fr; }
+    .step-rail { flex-direction: row; border-right: 0; border-bottom: 1px solid var(--line); padding: 14px 22px; gap: 14px; }
+    .step-line { display: none; }
+    .step-body { padding: 18px 20px 22px; }
+    .device { border-radius: 38px; }
+    .viewer-nav .label-text { display: none; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand">
+        <span class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5c2.4 3 1 5-.4 6.3C10 10.4 9 11.8 9 13.6a3 3 0 0 0 6 0c0-.7-.2-1.3-.5-1.9 2 .8 3.5 2.8 3.5 5.2a6 6 0 0 1-12 0c0-3.6 2.4-5.7 4-7.4C11.6 7.6 12.6 5.6 12 2.5Z" fill="#fff"/></svg>
+        </span>
+        <span class="brand-name">her<b>og</b></span>
+      </div>
+
+      <div class="hero">
+        <span class="kicker">사용자 참여 테스트 · UT</span>
+        <h1>소방관분들의 현장 목소리로<br /><span class="accent">더 나은 히어로그</span>를 만듭니다</h1>
+        <p>소방관분들의 소중한 현장 목소리를 반영하여 더 나은 서비스를 만들기 위한 테스트입니다. 테스트는 총 <b>5개의 단계(Flow)</b>로 진행되며, 각 화면을 자유롭게 이용해 보신 뒤 <b>‘사용하기 편한지’</b>, <b>‘진짜 필요한 기능인지’</b> 솔직하게 평가해 주세요.</p>
+
+        <div class="tip">
+          <div class="tip-ico">💡</div>
+          <div class="tip-body">
+            <h4>진행 팁</h4>
+            <p>어떤 버튼을 눌러야 할지 고민하지 않으셔도 됩니다. <span class="hl">페이지에 들어가면 나오는 위치 힌트</span>를 따라 진행해보세요!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="steps-head">
+        <h2>테스트 단계</h2>
+        <span class="sub">1단계부터 순서대로 진행해 주세요</span>
+      </div>
+      <div class="steps" id="steps"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>herog · 사용자 참여 테스트(UT)</span>
+      <span>각 단계는 독립 실행되는 모바일 프로토타입입니다</span>
+    </div>
+  </footer>
+
+  <!-- Viewer -->
+  <div class="viewer" id="viewer" role="dialog" aria-modal="true">
+    <div class="viewer-inner">
+      <div class="viewer-bar">
+        <div class="vtitle">
+          <div class="vno" id="v-no"></div>
+          <div class="vname" id="v-name"></div>
+        </div>
+        <a class="vbtn" id="v-newtab" href="#" target="_blank" rel="noopener" title="새 탭에서 열기">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M14 4h6v6M20 4l-9 9M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <button class="vbtn" id="v-close" title="닫기 (Esc)">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="device" id="device">
+        <div class="vloading"><div class="spinner"></div><span>플로우 불러오는 중…</span></div>
+        <iframe id="v-frame" title="flow preview"></iframe>
+      </div>
+      <div class="viewer-nav">
+        <button class="nav-pill" id="v-prev"><svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="label-text">이전</span></button>
+        <div class="dots" id="v-dots"></div>
+        <button class="nav-pill" id="v-next"><span class="label-text">다음</span><svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+      <div class="esc-hint"><kbd>Esc</kbd> 키 또는 바깥 영역을 눌러 닫기 · <kbd>←</kbd> <kbd>→</kbd> 단계 이동</div>
+    </div>
+  </div>
+
+  <script>
+  const FLOWS = [
+    {
+      no: '플로우 1',
+      title: '서비스 진입',
+      sub: '진입 및 가입',
+      head: '서비스 시작하기',
+      file: 'flows/flow1.html',
+      tasks: [
+        '‘히어로그’가 어떤 서비스인지 소개 화면을 가볍게 둘러보세요.',
+        '실제 사용하실 것처럼 회원가입 과정을 진행해 보세요.'
+      ]
+    },
+    {
+      no: '플로우 2',
+      title: '기록 및 상태 관리',
+      sub: '내 마음 기록 및 스트레스 관리',
+      head: '내 마음 기록 및 스트레스 관리',
+      file: 'flows/flow2.html',
+      tasks: [
+        '출동 복귀 후, 오늘 나의 심리 상태를 기록하고 확인해 보세요.',
+        '이전에 내가 기록했던 지난 심리 데이터를 찾아보세요.',
+        '현재 나의 누적 스트레스 수치와 최근 변화 추이를 점검해 보세요.'
+      ]
+    },
+    {
+      no: '플로우 3',
+      title: '공상 신청',
+      sub: '서류 작성',
+      head: '공상 신청하기',
+      file: 'flows/flow3.html',
+      tasks: [
+        '내가 공상 신청 자격이 되는지 확인하고, 신청서를 처음부터 끝까지 작성해 보세요.',
+        '안내에 따라 신청 유형을 선택하고, 서류 작성부터 최종 제출까지 평소 하시는 대로 자연스럽게 진행하시면 됩니다.'
+      ]
+    },
+    {
+      no: '플로우 4',
+      title: 'AI 상담 및 치료 연계',
+      sub: 'AI 상담 및 병원 연계',
+      head: 'AI 상담 및 병원 연계',
+      file: 'flows/flow4.html',
+      tasks: [
+        '가상(Virtual) AI와의 심리 상담을 체험해 보세요.',
+        '상담이 끝난 후, 리포트를 통해 나의 PTSD(외상후 스트레스 장애) 위험도를 확인해 보세요.',
+        '필요 시 전문의 진료를 받을 수 있도록 제휴 병원 예약을 진행해 보세요.',
+        '과거 진료 기록을 확인하고, 다음 진료를 위한 재진 예약까지 진행해 보세요.'
+      ]
+    },
+    {
+      no: '플로우 5',
+      title: '데이터 공유 및 알림 설정',
+      sub: '데이터 공유 및 근무 맞춤 알림 설정',
+      head: '데이터 공유 및 근무 맞춤 알림 설정',
+      file: 'flows/flow5.html',
+      tasks: [
+        '내 민감한 심리 기록이 누구에게 공개되는지 확인하고, 공개 범위를 직접 변경해 보세요.',
+        '나에게 꼭 필요한 알림만 받을 수 있도록 알림 설정을 조정해 보세요.',
+        '매일 아침 컨디션 알림이 오는 시간을 내가 원하는 시간으로 변경해 보세요.',
+        '야간 근무(당번)나 휴식 중 방해받지 않도록 ‘방해 금지 시간’을 설정해 보세요.'
+      ]
+    }
+  ];
+
+  function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function stepHTML(f, i) {
+    const last = i === FLOWS.length - 1;
+    const tasks = f.tasks.map(t => '<li>' + esc(t) + '</li>').join('');
+    return '' +
+      '<div class="step" data-screen-label="단계 ' + (i+1) + '">' +
+        '<div class="step-rail">' +
+          '<div class="step-no">' + (i+1) + '</div>' +
+          (last ? '' : '<div class="step-line"></div>') +
+        '</div>' +
+        '<div class="step-body">' +
+          '<div class="step-tag">' + esc(f.no) + ' · ' + (i+1) + '단계</div>' +
+          '<h3>' + esc(f.title) + '</h3>' +
+          '<div class="step-sub">' + esc(f.head) + '</div>' +
+          '<ul>' + tasks + '</ul>' +
+          '<div class="step-foot">' +
+            '<button class="btn-start" data-i="' + i + '">' +
+              '<svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+              ((i+1) + '단계 시작하기') +
+            '</button>' +
+            '<span class="hint">화면을 자유롭게 이용해 보세요</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  document.getElementById('steps').innerHTML = FLOWS.map(stepHTML).join('');
+
+  // ---- Dots ----
+  const dotsWrap = document.getElementById('v-dots');
+  dotsWrap.innerHTML = FLOWS.map(() => '<i></i>').join('');
+  const dots = [...dotsWrap.children];
+
+  // ---- Viewer logic ----
+  const viewer = document.getElementById('viewer');
+  const device = document.getElementById('device');
+  const frame = document.getElementById('v-frame');
+  const vNo = document.getElementById('v-no');
+  const vName = document.getElementById('v-name');
+  const vNew = document.getElementById('v-newtab');
+  const vPrev = document.getElementById('v-prev');
+  const vNext = document.getElementById('v-next');
+  let current = -1;
+
+  function loadFlow(i) {
+    const f = FLOWS[i];
+    current = i;
+    vNo.textContent = f.no + ' · ' + (i+1) + '단계';
+    vName.textContent = f.title;
+    vNew.href = f.file;
+    device.classList.remove('loaded');
+    frame.src = f.file;
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    vPrev.disabled = i === 0;
+    vNext.disabled = i === FLOWS.length - 1;
+  }
+  function openFlow(i) {
+    viewer.classList.add('on');
+    document.body.style.overflow = 'hidden';
+    loadFlow(i);
+  }
+  function closeFlow() {
+    viewer.classList.remove('on');
+    document.body.style.overflow = '';
+    setTimeout(() => { frame.src = 'about:blank'; device.classList.remove('loaded'); }, 200);
+  }
+
+  frame.addEventListener('load', () => {
+    if (frame.src && !frame.src.endsWith('about:blank')) device.classList.add('loaded');
+  });
+
+  document.querySelectorAll('.btn-start').forEach(b => {
+    b.addEventListener('click', () => openFlow(parseInt(b.dataset.i, 10)));
+  });
+  document.getElementById('v-close').addEventListener('click', closeFlow);
+  vPrev.addEventListener('click', () => { if (current > 0) loadFlow(current - 1); });
+  vNext.addEventListener('click', () => { if (current < FLOWS.length - 1) loadFlow(current + 1); });
+  viewer.addEventListener('click', (e) => { if (e.target === viewer) closeFlow(); });
+  document.addEventListener('keydown', (e) => {
+    if (!viewer.classList.contains('on')) return;
+    if (e.key === 'Escape') closeFlow();
+    else if (e.key === 'ArrowLeft' && current > 0) loadFlow(current - 1);
+    else if (e.key === 'ArrowRight' && current < FLOWS.length - 1) loadFlow(current + 1);
+  });
+  </script>
+</body>
+</html>
